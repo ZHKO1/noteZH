@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="stylesheets/style.css">
+  <script type="text/javascript" src="//d3js.org/d3.v3.min.js"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.min.js"></script>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.css" />
   <title>Row!Row! Fight The Power!</title>
 </head>
 <body>
@@ -33,7 +36,28 @@
               </ul>
           </div>
           <div class="column three-fourths">
-
+            <div class = "boxed-group flush">
+              <h3>Learn Note</h3>
+              <div id="learn-note-calendar" class="boxed-group-inner">
+                <div class="js-calendar-graph js-calendar-graph is-graph-loading graph-canvas calendar-graph"></div>
+                <div class="contrib-footer clearfix">
+                  <div class="contrib-legend text-small text-muted">
+                    <span>Less</span>
+                    <ul class="legend">
+                      <li style="background-color: #eee"></li>
+                      <li style="background-color: #d6e685"></li>
+                      <li style="background-color: #8cc665"></li>
+                      <li style="background-color: #44a340"></li>
+                      <li style="background-color: #1e6823"></li>
+                    </ul>
+                    <span>More</span>
+                  </div>
+                </div>
+                <div class="contrib-column contrib-column-first table-column"></div>
+                <div class="contrib-column table-column"></div>
+                <div class="contrib-column table-column">
+                </div>
+              </div>
           </div>
         </div>
       </div>
@@ -43,5 +67,6 @@
       </div>
     </div>
    </div>
+  </div>
 </body>
 </html>

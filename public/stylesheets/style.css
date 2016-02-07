@@ -196,3 +196,105 @@ svg:not(:root) {
   clear: both;
   content: ""
 }
+
+/*右侧css*/
+.boxed-group {
+  position: relative;
+  border-radius: 3px;
+  margin-bottom: 30px;
+
+  background: yellow;
+}
+
+.boxed-group>h3, .boxed-group .heading {
+  background-color: #f5f5f5;
+  margin: 0;
+  border-radius: 3px 3px 0 0;
+  border: 1px solid #d8d8d8;
+  border-bottom: 0;
+  padding: 9px 10px 10px;
+  font-size: 14px;
+  line-height: 17px;
+  display: block;
+}
+
+.boxed-group.flush .boxed-group-inner {
+  padding: 0;
+}
+
+.boxed-group-inner {
+  padding: 1px 10px;
+  background: #fff;
+  border: 1px solid #d8d8d8;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  color: #666;
+  font-size: 13px;
+}
+
+.calendar-graph {
+  padding: 5px 0 0;
+  height: 126px;
+  text-align: center;
+}
+
+.contrib-footer {
+  font-size: 11px;
+  padding: 0 10px 12px;
+}
+
+.clearfix:before {
+  display: table;
+  content: ""
+}
+
+.clearfix:after {
+  display: table;
+  clear: both;
+  content: ""
+}
+
+.contrib-legend {
+  float: right;
+}
+.text-small {
+  font-size: 12px;
+}
+.left {
+  float: left;
+}
+.text-muted {
+  color: #767676;
+}
+
+.contrib-legend .legend {
+  display: inline-block;
+  list-style: none;
+  margin: 0 5px;
+  position: relative;
+  bottom: -1px
+}
+
+.contrib-legend .legend li {
+  display: inline-block;
+  width: 10px;
+  height: 10px
+}
+.contrib-column {
+  padding: 15px 0;
+  text-align: center;
+  border-left: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+  font-size: 11px;
+}
+.table-column {
+  display: table-cell;
+  width: 1%;
+  padding-right: 10px;
+  padding-left: 10px;
+  vertical-align: top;
+}
+.contrib-column-first {
+  border-left: 0;
+}
+
