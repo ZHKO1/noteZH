@@ -298,3 +298,8 @@ svg:not(:root) {
   border-left: 0;
 }
 
+.calendar-graph {
+  padding: 5px 0 0;
+  height: 126px;
+  text-align: center;
+}
