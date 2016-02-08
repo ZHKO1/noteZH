@@ -299,7 +299,7 @@ svg:not(:root) {
 }
 
 .calendar-graph {
-  padding: 5px 0 0;
+  padding: 12px 6px 0;
   height: 126px;
   text-align: center;
 }
