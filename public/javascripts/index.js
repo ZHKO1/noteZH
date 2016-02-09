@@ -44,12 +44,30 @@ cal.init({
     console.log(nb);
   }
 });
-$.ajax({
-  type: "GET",
-  url: "/api/list",
-  dataType: "json",
-  success: function(data){
-    console.log(data);
+var api = {
+  listAllNotes : function(){
+    $.ajax({
+      type: "GET",
+      url: "/api/list",
+      dataType: "json",
+      success: function(data){
+        console.log(data);
 
+      }
+    });
+  },
+  addNewNote : function(data){
+    if((toString.apply(data.tags) === '[object Array]')&& (data.tags)){
+      data.tags = JSON.stringify(data.tags);
+    }
+    $.ajax({
+      type: "POST",
+      url: "/api/add",
+      dataType: "json",
+      data:data,
+      success: function(data){
+        console.log(data);
+      }
+    });
   }
-});
+}
