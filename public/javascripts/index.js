@@ -12,6 +12,22 @@ var cal = new CalHeatMap();
 var startDate = new Date();
 var day = startDate.getDate()
 startDate.setDate(day - 365);
+
+var weekStart = new Date();
+weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+var ranges = d3.range(+weekStart/1000, +weekStart/1000 + 3600*24*8, 3600*24);
+
+var max = 5;
+var min = 2;
+
+var marcData = {};
+
+// Creating a random data set
+ranges.map(function(element, index, array) {
+  console.log(element);
+  marcData[element] = 11;
+});
+
 cal.init({
   itemSelector: "#calendar",
   domain: "year",
@@ -19,6 +35,21 @@ cal.init({
   cellSize: 11.5,
   range: 1,
   displayLegend: false,
+  data: marcData,
   start: new Date(),
-  tooltip: true
+  tooltip: true,
+  legend: [10, 20, 30, 40],
+  onClick: function(date, nb) {
+    console.log(date);
+    console.log(nb);
+  }
+});
+$.ajax({
+  type: "GET",
+  url: "/api/list",
+  dataType: "json",
+  success: function(data){
+    console.log(data);
+
+  }
 });
