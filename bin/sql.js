@@ -23,6 +23,45 @@ var noteSchema = new Schema({
 });
 var noteModel = mongoose.model('note', noteSchema);
 
+var DateSchema = new Schema({
+  date: Date,
+  number: Number
+});
+var DateModel = mongoose.model('date', DateSchema);
+var Date_api = {
+  addDate :function(dateIN){
+    var date = new Date();
+    date.setYear(dateIN.getYear());
+    date.setMonth(dateIN.getMonth());
+    date.setDate(dateIN.getDate());
+    var dateData = new DateModel({
+      date: date,
+      number:1
+    });
+    dateData.save(function(err){
+      if(err) console.dir(err);
+      result = false;
+      return result;
+    });
+  },
+  listDate:function(){
+    var results = [];
+    DateModel.find({}, function(err,dates){
+      if(err) return console.error(err);
+      dates.map(function(date){
+        results.push(date.toJSON());
+      });
+      callback(results);
+    });
+  },
+  updateDate:function(){
+    var that = this;
+    //先测试Date例子是否存在
+
+  }
+}
+
+
 
 var api = {};
 //添加一条新的数据
@@ -46,13 +85,12 @@ api.addNote = function(data){
   console.dir(noteData._doc);
   return result;
 };
-
+//删除note
 api.deleteNote = function(_id, options){
   noteModel.where().findOneAndRemove({_id:_id}, function(err){
     if(err){
       console.error(err);
       if(options.failed){
-        console.log("回调failed");
         options.failed();
         return;
       }
@@ -62,7 +100,7 @@ api.deleteNote = function(_id, options){
     }
   })
 }
-
+//删除tag
 api.deleteTag = function(){
 
 }
@@ -86,8 +124,23 @@ api.findAllNote = function(callback){
     callback(results);
   });
 }
-
-
+//修改note
+api.updateNote = function(id, data, options){
+  var tags = data.tags?JSON.parse(data.tags):[];
+  data.tags = tags;
+  noteModel.update(id, data, function(err){
+    if(err){
+      console.error(err);
+      if(options.failed){
+        options.failed();
+        return;
+      }
+    }else{
+      if(options.success)
+        options.success();
+    }
+  });
+}
 
 module.exports = api;
 

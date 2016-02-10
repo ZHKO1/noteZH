@@ -79,5 +79,19 @@ var api = {
         console.log(data);
       }
     });
+  },
+  updateNote:function(id,data){
+    if((toString.apply(data.tags) === '[object Array]')&& (data.tags)){
+      data.tags = JSON.stringify(data.tags);
+    }
+    $.ajax({
+      type: "POST",
+      url: "/api/note?id=" + id,
+      dataType: "json",
+      data:data,
+      success: function(data){
+        console.log(data);
+      }
+    });
   }
 }

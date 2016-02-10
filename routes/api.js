@@ -53,8 +53,26 @@ router.delete('/note', function(req, res, next) {
   }
 });
 
-router.get('/update', function(req, res, next) {
-  console.log("update");
+router.post('/note', function(req, res, next) {
+  var data  = req.body;
+  if(req.query.id){
+    var id = req.query.id;
+    api.updateNote(id, data, {
+      failed:function(){
+        res.writeHead(404, {'Content-Type': 'application/json;charset=utf-8'});
+        var status = 404;
+        res.status(status).end(JSON.stringify({status: "修改错误"}));
+      },
+      success:function(){
+        res.status(200);
+        res.end(JSON.stringify({status:"ok"}));
+      }
+    });
+  }else{
+    res.sendStatus(404)
+    result.status = "not found";
+    res.end(JSON.stringify(result));
+  }
 });
 
 module.exports = router;
