@@ -47,12 +47,30 @@ api.addNote = function(data){
   return result;
 };
 
+api.deleteNote = function(_id, options){
+  noteModel.where().findOneAndRemove({_id:_id}, function(err){
+    if(err){
+      console.error(err);
+      if(options.failed){
+        console.log("回调failed");
+        options.failed();
+        return;
+      }
+    }else{
+      if(options.success)
+        options.success();
+    }
+  })
+}
+
+api.deleteTag = function(){
+
+}
 //查找制定日期的notes
 api.findDate = function(date){
   var result = false;
   noteModel.find({date: date}, function(err,notes){
     if(err) return console.error(err);
-
     console.dir(notes);
   });
 }
@@ -68,6 +86,8 @@ api.findAllNote = function(callback){
     callback(results);
   });
 }
+
+
 
 module.exports = api;
 

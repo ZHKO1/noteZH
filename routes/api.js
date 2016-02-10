@@ -31,9 +31,26 @@ router.get('/list', function(req, res, next) {
   });
 });
 
-router.get('/delete', function(req, res, next) {
-
-  console.log("delete");
+router.delete('/note', function(req, res, next) {
+  var result = {};
+  if(req.query){
+    var id = req.query.id;
+    api.deleteNote(id, {
+      failed: function () {
+        var status = 404;
+        res.status(status).end();
+      },
+      success: function () {
+        res.status = 202;
+        result.status = "ok";
+        res.end(JSON.stringify(result));
+      },
+    })
+  }else{
+    res.sendStatus(404)
+    result.status = "not found";
+    res.end(JSON.stringify(result));
+  }
 });
 
 router.get('/update', function(req, res, next) {

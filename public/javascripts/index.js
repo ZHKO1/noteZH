@@ -69,5 +69,15 @@ var api = {
         console.log(data);
       }
     });
+  },
+  deleteNote : function(_id){
+    $.ajax({
+      type: "delete",
+      url: "/api/note?id=" + _id,
+      dataType: "json",
+      success: function(data){
+        console.log(data);
+      }
+    });
   }
 }
