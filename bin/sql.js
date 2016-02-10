@@ -125,7 +125,10 @@ api.updateNote = function(id, data, options){
   });
 }
 
-
+//todo 根据指定日期来查找note
+//todo 根据tag来查找note
+//todo 获取所有date的数据，用在日历组建上
+//todo 查找所有tags的数量数据
 
 module.exports = api;
 
