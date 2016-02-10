@@ -64,7 +64,6 @@ var Date_api = {
 
 
 var api = {};
-//添加一条新的数据
 api.addNote = function(data){
   var result = true;
   console.log(data)
@@ -85,7 +84,6 @@ api.addNote = function(data){
   console.dir(noteData._doc);
   return result;
 };
-//删除note
 api.deleteNote = function(_id, options){
   noteModel.where().findOneAndRemove({_id:_id}, function(err){
     if(err){
@@ -100,20 +98,6 @@ api.deleteNote = function(_id, options){
     }
   })
 }
-//删除tag
-api.deleteTag = function(){
-
-}
-//查找制定日期的notes
-api.findDate = function(date){
-  var result = false;
-  noteModel.find({date: date}, function(err,notes){
-    if(err) return console.error(err);
-    console.dir(notes);
-  });
-}
-
-//查找所有notes
 api.findAllNote = function(callback){
   var results = [];
   noteModel.find({}, function(err,notes){
@@ -124,7 +108,6 @@ api.findAllNote = function(callback){
     callback(results);
   });
 }
-//修改note
 api.updateNote = function(id, data, options){
   var tags = data.tags?JSON.parse(data.tags):[];
   data.tags = tags;
@@ -141,6 +124,8 @@ api.updateNote = function(id, data, options){
     }
   });
 }
+
+
 
 module.exports = api;
 
