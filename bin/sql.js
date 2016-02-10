@@ -43,6 +43,7 @@ api.addNote = function(data){
     result = false;
     return result;
   });
+  console.dir(noteData._doc);
   return result;
 };
 
@@ -51,17 +52,20 @@ api.findDate = function(date){
   var result = false;
   noteModel.find({date: date}, function(err,notes){
     if(err) return console.error(err);
-    console.dir(motes);
+
+    console.dir(notes);
   });
 }
 
 //查找所有notes
-api.findAllNote = function(){
-  var result = false;
+api.findAllNote = function(callback){
+  var results = [];
   noteModel.find({}, function(err,notes){
     if(err) return console.error(err);
-    console.dir(notes);
-    return notes;
+    notes.map(function(note){
+      results.push(note.toJSON());
+    });
+    callback(results);
   });
 }
 

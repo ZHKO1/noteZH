@@ -6,12 +6,12 @@ var router = express.Router();
 var api = require('../bin/sql.js');
 var util = require('util');
 
-/* GET users listing. */
+/* GET listing. */
 router.post('/add', function(req, res, next) {
   var data  = req.body;
   if(api.addNote(data)){
     console.log("添加成功");
-    res.status = 500;
+    res.status = 200;
     res.end(JSON.stringify({status:"ok"}));
   }else{
     console.log("添加失败");
@@ -22,12 +22,17 @@ router.post('/add', function(req, res, next) {
 });
 
 router.get('/list', function(req, res, next) {
-  api.findAllNote();
-  console.log("list");
-  res.end(JSON.stringify({wow:123}));
+  var result = {};
+  api.findAllNote(function(results){
+    res.writeHead(200, {'Content-Type': 'application/json;charset=utf-8'});
+    result.status = "ok";
+    result.result = results;
+    res.end(JSON.stringify(result));
+  });
 });
 
 router.get('/delete', function(req, res, next) {
+
   console.log("delete");
 });
 
