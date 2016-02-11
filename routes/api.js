@@ -23,12 +23,21 @@ router.post('/add', function(req, res, next) {
 
 router.get('/list', function(req, res, next) {
   var result = {};
-  api.findAllNote(function(results){
-    res.writeHead(200, {'Content-Type': 'application/json;charset=utf-8'});
-    result.status = "ok";
-    result.result = results;
-    res.end(JSON.stringify(result));
-  });
+  if(req.query.date){
+    api.findNoteByDate(req.query.date, function(results){
+      res.writeHead(200, {'Content-Type': 'application/json;charset=utf-8'});
+      result.status = "ok";
+      result.result = results;
+      res.end(JSON.stringify(result));
+    });
+  }else{
+    api.findAllNote(function(results){
+      res.writeHead(200, {'Content-Type': 'application/json;charset=utf-8'});
+      result.status = "ok";
+      result.result = results;
+      res.end(JSON.stringify(result));
+    });
+  }
 });
 
 router.delete('/note', function(req, res, next) {

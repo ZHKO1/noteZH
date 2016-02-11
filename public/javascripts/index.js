@@ -50,6 +50,16 @@ var api = {
       }
     });
   },
+  listNotesByDate : function(date){
+    $.ajax({
+      type: "GET",
+      url: "/api/list?date=" + date.getTime(),
+      dataType: "json",
+      success: function(data){
+        console.log(data);
+      }
+    });
+  },
   addNewNote : function(data){
     if((toString.apply(data.tags) === '[object Array]')&& (data.tags)){
       data.tags = JSON.stringify(data.tags);

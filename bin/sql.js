@@ -44,7 +44,7 @@ var Date_api = {
       return result;
     });
   },
-  listDate:function(){
+  listDate:function(callback){
     var results = [];
     DateModel.find({}, function(err,dates){
       if(err) return console.error(err);
@@ -54,10 +54,25 @@ var Date_api = {
       callback(results);
     });
   },
-  updateDate:function(){
+  updateDate:function(dateIN, dir){
     var that = this;
-    //先测试Date例子是否存在
+    var date = new Date();
+    date.setYear(dateIN.getYear());
+    date.setMonth(dateIN.getMonth());
+    date.setDate(dateIN.getDate());
 
+    DateModel.update({date:date}, {}, function(err){
+      if(err){
+        console.error(err);
+        if(options.failed){
+          options.failed();
+          return;
+        }
+      }else{
+        if(options.success)
+          options.success();
+      }
+    });
   }
 }
 
@@ -125,7 +140,38 @@ api.updateNote = function(id, data, options){
   });
 }
 
-//todo 根据指定日期来查找note
+api.findNoteByDate = function(dateIN,callback){
+  var results = [];
+  var dateIN = new Date(parseInt(dateIN,10));
+
+  var dateForm = new Date();
+  dateForm.setYear(dateIN.getYear() + 1900);
+  dateForm.setMonth(dateIN.getMonth());
+  dateForm.setDate(dateIN.getDate());
+  dateForm.setHours(0);
+  dateForm.setMinutes(0);
+
+  var dateTo = new Date();
+  dateTo.setYear(dateIN.getYear() + 1900);
+  dateTo.setMonth(dateIN.getMonth());
+  dateTo.setDate(dateIN.getDate() + 1);
+  dateTo.setHours(0);
+  dateTo.setMinutes(0);
+
+  noteModel.find({
+    date:{
+    "$gte": dateForm,
+    "$lt": dateTo
+  }}, function(err,notes){
+    if(err) return console.error(err);
+    notes.map(function(note){
+      results.push(note.toJSON());
+    });
+    console.log(results.length);
+    callback(results);
+  });
+}
+
 //todo 根据tag来查找note
 //todo 获取所有date的数据，用在日历组建上
 //todo 查找所有tags的数量数据
