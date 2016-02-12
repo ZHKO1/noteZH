@@ -79,27 +79,33 @@ var Date_api = {
 
 
 var api = {};
-api.addNote = function(data){
+api.addNote        = function(data){
   var result = true;
-  console.log(data)
   var content = data.content;
   var date = data.date?data.date:new Date();
   var tags = data.tags?JSON.parse(data.tags):[];
-  console.log(tags);
   var noteData = new noteModel({
     content: content,
     date: date,
     tags:tags,
   });
   noteData.save(function(err){
-    if(err) console.dir(err);
-    result = false;
-    return result;
+    if(err){
+      console.dir(err);
+      result = false;
+      return result;
+    }else{
+      console.dir(noteData._doc);
+      var year  = date.getYear() + 1900;
+      var month = date.getMonth();
+      var date  = date.getDate();
+      var timeString = year + "-" + month + "-" + date;
+      Date_api.updateDate(timeString);
+      return result;
+    }
   });
-  console.dir(noteData._doc);
-  return result;
 };
-api.deleteNote = function(_id, options){
+api.deleteNote     = function(_id, options){
   noteModel.where().findOneAndRemove({_id:_id}, function(err){
     if(err){
       console.error(err);
@@ -113,7 +119,7 @@ api.deleteNote = function(_id, options){
     }
   })
 }
-api.findAllNote = function(callback){
+api.findAllNote    = function(callback){
   var results = [];
   noteModel.find({}, function(err,notes){
     if(err) return console.error(err);
@@ -123,10 +129,11 @@ api.findAllNote = function(callback){
     callback(results);
   });
 }
-api.updateNote = function(id, data, options){
+api.updateNote     = function(id, data, options){
   var tags = data.tags?JSON.parse(data.tags):[];
   data.tags = tags;
-  noteModel.update(id, data, function(err){
+  delete data.date;
+  noteModel.update({_id:id}, data, function(err){
     if(err){
       console.error(err);
       if(options.failed){
@@ -139,7 +146,6 @@ api.updateNote = function(id, data, options){
     }
   });
 }
-
 api.findNoteByDate = function(dateIN, callback){
   var results = [];
   var dateIN = new Date(parseInt(dateIN,10));
@@ -171,8 +177,7 @@ api.findNoteByDate = function(dateIN, callback){
     callback(results);
   });
 }
-
-api.findNoteByTag = function(tag, callback){
+api.findNoteByTag  = function(tag, callback){
   var results = [];
   noteModel.find({
       tags:{$in: [tag]}
