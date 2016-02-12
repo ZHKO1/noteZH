@@ -231,7 +231,15 @@ api.findNoteByTag  = function(tag, callback){
   });
 }
 
-//todo 查找所有tags的数量数据
+//todo 继续完善功能 也就是最为基本的TODOlist功能
+//todo 查找每个tag对应的notes数量 想法：经验值
+//todo 修改tags 以及删除tags
+//todo 引入测试机制，节省劳动力
+//todo 研究resful机制，重新洗牌接口
+//todo 思考ES6方式，重新洗牌
+//todo 解决金字塔方式回调问题，重新洗牌
+//todo 看书思考正规写法，重新洗牌
+//todo (WARNING 前方高能) PSN奖杯的爬虫功能引入
 
 module.exports = api;
 
