@@ -82,7 +82,13 @@ var Date_api = {
         if(dir >= 0)
           DateModel.update({date: timeString},{'$inc':{'number':1} } ,function(err){});
         if(dir < 0)
-          DateModel.update({date: timeString},{'$inc':{'number':-1} } ,function(err){});
+          DateModel.findOneAndUpdate({date: timeString},{'$inc':{'number':-1} } ,function(err,doc){
+            if(doc._doc.number == 1){
+              doc.remove(function(err){
+                if(err) return console.error(err);
+              });
+            }
+          });
       },
       createCallback:function(){
         that.addDate(timeString, {
