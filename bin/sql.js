@@ -29,19 +29,37 @@ var DateSchema = new Schema({
 });
 var DateModel = mongoose.model('date', DateSchema);
 var Date_api = {
-  addDate :function(dateIN){
-    var date = new Date();
-    date.setYear(dateIN.getYear());
-    date.setMonth(dateIN.getMonth());
-    date.setDate(dateIN.getDate());
+  isExistDate :function(timeString, options){
+    var that = this;
+    DateModel.findOne({date:timeString},function(err,date){
+      if(err){
+        console.error(err);
+        if(options.failed){
+          options.failed();
+        }
+      }else{
+        if(date && options.success){
+            options.success();
+        }else if(!date && options.createCallback){
+          options.createCallback();
+        }else{}
+      }
+    });
+
+  },
+  addDate :function(timeString,options){
     var dateData = new DateModel({
-      date: date,
+      date: timeString,
       number:1
     });
     dateData.save(function(err){
-      if(err) console.dir(err);
-      result = false;
-      return result;
+      if(err && options.failed){
+        options.failed();
+      }
+      if(!err && options.success){
+        options.success();
+      }
+
     });
   },
   listDate:function(callback){
@@ -56,29 +74,23 @@ var Date_api = {
   },
   updateDate:function(timeString, dir){
     var that = this;
-    var date = new Date(timeString);
-
-    //先判断date数据在不在
-    DateModel.findOne({date:timeString},function(err,date){
-      if(err) return console.error(err);
-      if(date){
-
+    that.isExistDate(timeString, {
+      failed:function(){
+        console.log("查找错误");
+      },
+      success:function(){
+        if(dir >= 0)
+          DateModel.update({date: timeString},{'$inc':{'number':1} } ,function(err){});
+        if(dir < 0)
+          DateModel.update({date: timeString},{'$inc':{'number':-1} } ,function(err){});
+      },
+      createCallback:function(){
+        that.addDate(timeString, {
+          failed:function(){},
+          success:function(){}
+        });
       }
     });
-    /*
-    DateModel.update({date:date}, {}, function(err){
-      if(err){
-        console.error(err);
-        if(options.failed){
-          options.failed();
-          return;
-        }
-      }else{
-        if(options.success)
-          options.success();
-      }
-    });
-    */
   }
 }
 
