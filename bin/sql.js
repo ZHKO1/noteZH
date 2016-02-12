@@ -63,11 +63,14 @@ var Date_api = {
     });
   },
   listDate:function(callback){
-    var results = [];
+    var results = {};
     DateModel.find({}, function(err,dates){
       if(err) return console.error(err);
       dates.map(function(date){
-        results.push(date.toJSON());
+        var date = date.toJSON();
+        date.date = new Date(date.date);
+        date.date = Math.ceil(date.date.getTime()/1000);
+        results[date.date] = date.number;
       });
       callback(results);
     });
@@ -164,6 +167,9 @@ api.findAllNote    = function(callback){
     callback(results);
   });
 }
+api.findCalender   = function(callback){
+  Date_api.listDate(callback);
+}
 api.updateNote     = function(id, data, options){
   var tags = data.tags?JSON.parse(data.tags):[];
   data.tags = tags;
@@ -226,7 +232,6 @@ api.findNoteByTag  = function(tag, callback){
   });
 }
 
-//todo 获取所有date的数据，用在日历组建上
 //todo 查找所有tags的数量数据
 
 module.exports = api;

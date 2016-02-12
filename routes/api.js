@@ -39,7 +39,7 @@ router.get('/list', function(req, res, next) {
       result.result = results;
       res.end(JSON.stringify(result));
     });
-  }else {
+  }else{
     api.findAllNote(function(results){
       res.writeHead(200, {'Content-Type': 'application/json;charset=utf-8'});
       result.status = "ok";
@@ -48,6 +48,17 @@ router.get('/list', function(req, res, next) {
     });
   }
 });
+
+router.get('/calender', function(req, res, next) {
+  var result = {};
+  api.findCalender(function(results){
+    res.writeHead(200, {'Content-Type': 'application/json;charset=utf-8'});
+    result.status = "ok";
+    result.result = results;
+    res.end(JSON.stringify(result));
+  });
+});
+
 
 router.delete('/note', function(req, res, next) {
   var result = {};
