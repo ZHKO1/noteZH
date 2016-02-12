@@ -30,7 +30,14 @@ router.get('/list', function(req, res, next) {
       result.result = results;
       res.end(JSON.stringify(result));
     });
-  }else{
+  }else if(req.query.tag){
+    api.findNoteByTag(req.query.tag, function(results){
+      res.writeHead(200, {'Content-Type': 'application/json;charset=utf-8'});
+      result.status = "ok";
+      result.result = results;
+      res.end(JSON.stringify(result));
+    });
+  }else {
     api.findAllNote(function(results){
       res.writeHead(200, {'Content-Type': 'application/json;charset=utf-8'});
       result.status = "ok";

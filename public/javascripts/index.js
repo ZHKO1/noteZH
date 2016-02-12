@@ -60,6 +60,16 @@ var api = {
       }
     });
   },
+  listNotesByTag : function(tag){
+    $.ajax({
+      type: "GET",
+      url: "/api/list?tag=" + tag,
+      dataType: "json",
+      success: function(data){
+        console.log(data);
+      }
+    });
+  },
   addNewNote : function(data){
     if((toString.apply(data.tags) === '[object Array]')&& (data.tags)){
       data.tags = JSON.stringify(data.tags);

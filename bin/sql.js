@@ -140,7 +140,7 @@ api.updateNote = function(id, data, options){
   });
 }
 
-api.findNoteByDate = function(dateIN,callback){
+api.findNoteByDate = function(dateIN, callback){
   var results = [];
   var dateIN = new Date(parseInt(dateIN,10));
 
@@ -172,7 +172,20 @@ api.findNoteByDate = function(dateIN,callback){
   });
 }
 
-//todo 根据tag来查找note
+api.findNoteByTag = function(tag, callback){
+  var results = [];
+  noteModel.find({
+      tags:{$in: [tag]}
+    }, function(err,notes){
+    if(err) return console.error(err);
+    notes.map(function(note){
+      results.push(note.toJSON());
+    });
+    console.log(results.length);
+    callback(results);
+  });
+}
+
 //todo 获取所有date的数据，用在日历组建上
 //todo 查找所有tags的数量数据
 
