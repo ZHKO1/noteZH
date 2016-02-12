@@ -87,21 +87,7 @@ var api = {
   }
 }
 
-
-
 var cal = new CalHeatMap();
-var startDate = new Date();
-var day = startDate.getDate()
-startDate.setDate(day - 365);
-
-var weekStart = new Date();
-weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-var ranges = d3.range(+weekStart/1000, +weekStart/1000 + 3600*24*8, 3600*24);
-
-var max = 5;
-var min = 2;
-
-var marcData = {};
 
 cal.init({
   itemSelector: "#calendar",
@@ -113,7 +99,7 @@ cal.init({
   data: api.listCalender(),
   start: new Date(),
   tooltip: true,
-  legend: [10, 20, 30, 40],
+  legend: [1, 2, 3, 4],
   onClick: function(date, nb) {
     console.log(date);
     console.log(nb);

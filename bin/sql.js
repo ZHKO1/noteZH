@@ -1,6 +1,5 @@
 var mongoose = require('mongoose'),
   db = 'mongodb://localhost:27017/noteZH';
-// 数据库连接
 mongoose.connect(db);
 mongoose.connection.on('connected', function(){
   console.log("开始链接");
