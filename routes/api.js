@@ -9,16 +9,18 @@ var util = require('util');
 /* GET listing. */
 router.post('/add', function(req, res, next) {
   var data  = req.body;
-  if(api.addNote(data)){
-    console.log("添加成功");
-    res.status = 200;
-    res.end(JSON.stringify({status:"ok"}));
-  }else{
-    console.log("添加失败");
-    res.status = 500;
-    res.end(JSON.stringify({status: "数据库添加错误"}));
-  }
-
+  api.addNote(data,{
+    failed:function(){
+      console.log("添加失败");
+      res.writeHead(500, {'Content-Type': 'application/json;charset=utf-8'});
+      res.end(JSON.stringify({status: "数据库添加错误"}));
+    },
+    success:function(){
+      console.log("添加成功");
+      res.status = 200;
+      res.end(JSON.stringify({status:"ok"}));
+    }
+  })
 });
 
 router.get('/list', function(req, res, next) {

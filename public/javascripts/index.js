@@ -17,10 +17,12 @@ var min = 2;
 var marcData = {};
 
 // Creating a random data set
+/*
 ranges.map(function(element, index, array) {
   console.log(element);
   marcData[element] = 11;
 });
+*/
 
 cal.init({
   itemSelector: "#calendar",

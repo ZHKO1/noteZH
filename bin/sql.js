@@ -24,7 +24,7 @@ var noteSchema = new Schema({
 var noteModel = mongoose.model('note', noteSchema);
 
 var DateSchema = new Schema({
-  date: Date,
+  date: String,
   number: Number
 });
 var DateModel = mongoose.model('date', DateSchema);
@@ -54,13 +54,18 @@ var Date_api = {
       callback(results);
     });
   },
-  updateDate:function(dateIN, dir){
+  updateDate:function(timeString, dir){
     var that = this;
-    var date = new Date();
-    date.setYear(dateIN.getYear());
-    date.setMonth(dateIN.getMonth());
-    date.setDate(dateIN.getDate());
+    var date = new Date(timeString);
 
+    //先判断date数据在不在
+    DateModel.findOne({date:timeString},function(err,date){
+      if(err) return console.error(err);
+      if(date){
+
+      }
+    });
+    /*
     DateModel.update({date:date}, {}, function(err){
       if(err){
         console.error(err);
@@ -73,13 +78,14 @@ var Date_api = {
           options.success();
       }
     });
+    */
   }
 }
 
 
 
 var api = {};
-api.addNote        = function(data){
+api.addNote        = function(data,options){
   var result = true;
   var content = data.content;
   var date = data.date?data.date:new Date();
@@ -92,21 +98,26 @@ api.addNote        = function(data){
   noteData.save(function(err){
     if(err){
       console.dir(err);
-      result = false;
-      return result;
+      if(options.failed){
+        options.failed();
+        return;
+      }
     }else{
       console.dir(noteData._doc);
+      var date = noteData._doc.date;
       var year  = date.getYear() + 1900;
-      var month = date.getMonth();
+      var month = date.getMonth() + 1;
       var date  = date.getDate();
       var timeString = year + "-" + month + "-" + date;
-      Date_api.updateDate(timeString);
-      return result;
+      console.log(timeString);
+      Date_api.updateDate(timeString, 1);
+      if(options.success)
+        options.success();
     }
   });
 };
 api.deleteNote     = function(_id, options){
-  noteModel.where().findOneAndRemove({_id:_id}, function(err){
+  noteModel.where().findOneAndRemove({_id:_id}, function(err, doc){
     if(err){
       console.error(err);
       if(options.failed){
@@ -114,6 +125,12 @@ api.deleteNote     = function(_id, options){
         return;
       }
     }else{
+      var date = doc._doc.date;
+      var year  = date.getYear() + 1900;
+      var month = date.getMonth() + 1;
+      var date  = date.getDate();
+      var timeString = year + "-" + month + "-" + date;
+      Date_api.updateDate(timeString, -1);
       if(options.success)
         options.success();
     }
