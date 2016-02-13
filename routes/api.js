@@ -59,7 +59,6 @@ router.get('/calender', function(req, res, next) {
   });
 });
 
-
 router.delete('/note', function(req, res, next) {
   var result = {};
   if(req.query){

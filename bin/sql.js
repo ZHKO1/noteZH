@@ -232,6 +232,19 @@ api.findNoteByTag  = function(tag, callback){
 }
 
 //todo 继续完善功能 也就是最为基本的TODOlist功能
+//布局
+/*
+  日历
+  总共经验值 连击数
+
+  tags 的各经验值
+  默认显示 最近三个commit
+  点击日期 按照日期来显示该日期所有的commit
+
+
+
+*/
+
 //todo 查找每个tag对应的notes数量 想法：经验值
 //todo 修改tags 以及删除tags
 //todo 引入测试机制，节省劳动力

@@ -103,6 +103,7 @@ cal.init({
   onClick: function(date, nb) {
     console.log(date);
     console.log(nb);
+
   }
 });
 cal.update(api.listCalender());
