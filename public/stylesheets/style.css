@@ -360,3 +360,18 @@ svg:not(:root) {
 .simple-conversation-list>li .title {
   font-weight: bold;
 }
+
+.tag_class{
+  display: inline-block;
+  height: 22px;
+  line-height: 22px;
+  padding: 0 5px;
+  margin: 0 6px 6px 0;
+  color: #fff;
+  font-size: 12px;
+  white-space: nowrap;
+  background-color: #aaa;
+  cursor: pointer;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+}

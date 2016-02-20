@@ -240,9 +240,6 @@ api.findNoteByTag  = function(tag, callback){
   tags 的各经验值
   默认显示 最近三个commit
   点击日期 按照日期来显示该日期所有的commit
-
-
-
 */
 
 //todo 查找每个tag对应的notes数量 想法：经验值
