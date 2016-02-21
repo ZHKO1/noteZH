@@ -40,7 +40,7 @@ router.get('/list', function(req, res, next) {
       res.end(JSON.stringify(result));
     });
   }else{
-    api.findAllNote(function(results){
+    api.findAllNote(-1, function(results){
       res.writeHead(200, {'Content-Type': 'application/json;charset=utf-8'});
       result.status = "ok";
       result.result = results;

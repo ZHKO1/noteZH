@@ -102,8 +102,6 @@ var Date_api = {
   }
 }
 
-
-
 var api = {};
 api.addNote        = function(data,options){
   var result = true;
@@ -156,9 +154,9 @@ api.deleteNote     = function(_id, options){
     }
   })
 }
-api.findAllNote    = function(callback){
+api.findAllNote    = function(order, callback){
   var results = [];
-  noteModel.find({}, function(err,notes){
+  noteModel.find({}).sort({date:order}).exec(function(err,notes){
     if(err) return console.error(err);
     notes.map(function(note){
       results.push(note.toJSON());
@@ -230,29 +228,5 @@ api.findNoteByTag  = function(tag, callback){
     callback(results);
   });
 }
-
-//todo 对话框
-//todo input的处理
-//todo 正则表达式的处理
-
-//布局
-/*
-  日历
-  总共经验值 连击数
-
-  tags 的各经验值
-  默认显示 最近三个commit
-  点击日期 按照日期来显示该日期所有的commit
-*/
-
-//todo 查找每个tag对应的notes数量 想法：经验值
-//todo 修改tags 以及删除tags
-//todo 引入测试机制，节省劳动力
-//todo 研究resful机制，重新洗牌接口
-//todo 思考ES6方式，重新洗牌
-//todo 找个框架学习 将自己的用户体验思维 重新洗牌一遍
-//todo 解决金字塔方式回调问题，重新洗牌
-//todo 看书思考正规写法，重新洗牌
-//todo (WARNING 前方高能) PSN奖杯的爬虫功能引入
 
 module.exports = api;

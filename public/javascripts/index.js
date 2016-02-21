@@ -16,24 +16,29 @@ var api = {
     });
     return result;
   },
-  listAllNotes : function(){
+  listAllNotes : function(callback){
     $.ajax({
       type: "GET",
       url: "/api/list",
       dataType: "json",
       success: function(data){
         console.log(data);
-
+        if(callback){
+          callback(data);
+        }
       }
     });
   },
-  listNotesByDate : function(date){
+  listNotesByDate : function(date,callback){
     $.ajax({
       type: "GET",
       url: "/api/list?date=" + date.getTime(),
       dataType: "json",
       success: function(data){
         console.log(data);
+        if(callback){
+          callback(data);
+        }
       }
     });
   },
@@ -87,6 +92,58 @@ var api = {
   }
 }
 
+var nodeManage = {
+  refreshNotes:function(options){
+    var that = this;
+    that.clearNotes();
+    that.addNoteData(options.data.result, options.limit);
+  },
+  addNoteData:function(datas, limit, order){
+    var i = 0;
+    if(limit){
+      var limit = limit>datas.length?datas.length:limit;
+    }else{
+      var limit = datas.length;
+    }
+    var ul_node = $("#notelist_ul");
+    for(i = 0; i < limit ; i++){
+      var data = datas[i];
+      var li_node_html = "<li><a href='#' class='title'>" + data.content + "</a></li>"
+      var li_node = $(li_node_html);
+      /*
+      var j = 0;
+      for(j = 0;j < data.tags.length ;j++){
+        var tag_node_html = "<span class = 'tag_class'>#" + data.tags[j] + "</span>"
+        var tag_node = $(tag_node_html);
+        li_node.append(tag_node);
+      }
+      */
+      var month_obj = {
+        1:"Jan",
+        2:"Feb",
+        3:"Mar",
+        4:"Apr",
+        5:"May",
+        6:"Jun",
+        7:"Jul",
+        8:"Aug",
+        9:"Sep",
+        10:"Oct",
+        11:"Nov",
+        12:"Dec"
+      }
+      var date = new Date(data.date);
+      var date_node_html = "<span style = 'padding-left: 5px'>" + month_obj[date.getMonth() + 1] + " " + date.getDate()  + "</span>"
+      var date_node = $(date_node_html);
+      li_node.append(date_node);
+      ul_node.append(li_node);
+    }
+  },
+  clearNotes:function(){
+    $("#notelist_ul")[0].innerHTML = "";
+  }
+}
+
 var cal = new CalHeatMap();
 
 cal.init({
@@ -101,9 +158,20 @@ cal.init({
   tooltip: true,
   legend: [1, 2, 3, 4],
   onClick: function(date, nb) {
-    console.log(date);
-    console.log(nb);
-
+    api.listNotesByDate(date, function(data){
+      var options = {
+        data : data
+      }
+      nodeManage.refreshNotes(options);
+    });
   }
 });
 cal.update(api.listCalender());
+
+api.listAllNotes(function(data){
+  var options = {
+    data : data,
+    limit : 3
+  }
+  nodeManage.refreshNotes(options);
+});
