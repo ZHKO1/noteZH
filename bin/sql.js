@@ -231,7 +231,10 @@ api.findNoteByTag  = function(tag, callback){
   });
 }
 
-//todo 继续完善功能 也就是最为基本的TODOlist功能
+//todo 对话框
+//todo input的处理
+//todo 正则表达式的处理
+
 //布局
 /*
   日历
@@ -247,9 +250,9 @@ api.findNoteByTag  = function(tag, callback){
 //todo 引入测试机制，节省劳动力
 //todo 研究resful机制，重新洗牌接口
 //todo 思考ES6方式，重新洗牌
+//todo 找个框架学习 将自己的用户体验思维 重新洗牌一遍
 //todo 解决金字塔方式回调问题，重新洗牌
 //todo 看书思考正规写法，重新洗牌
 //todo (WARNING 前方高能) PSN奖杯的爬虫功能引入
 
 module.exports = api;
-
