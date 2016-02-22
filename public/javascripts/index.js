@@ -52,7 +52,7 @@ var api = {
       }
     });
   },
-  addNewNote : function(data){
+  addNewNote : function(data,callback){
     if((toString.apply(data.tags) === '[object Array]')&& (data.tags)){
       data.tags = JSON.stringify(data.tags);
     }
@@ -63,6 +63,7 @@ var api = {
       data:data,
       success: function(data){
         console.log(data);
+        callback();
       }
     });
   },
@@ -93,6 +94,11 @@ var api = {
 }
 
 var nodeManage = {
+  showInput: function(){
+    $("#Notesinput")[0].value = "";
+    $("#Notesinput_container").fadeToggle();
+    $("#Notesinput").focus();
+  },
   refreshNotes:function(options){
     var that = this;
     that.clearNotes();
@@ -144,34 +150,87 @@ var nodeManage = {
   }
 }
 
-var cal = new CalHeatMap();
-
-cal.init({
-  itemSelector: "#calendar",
-  domain: "year",
-  subDomain: "day",
-  cellSize: 11.5,
-  range: 1,
-  displayLegend: false,
-  data: api.listCalender(),
-  start: new Date(),
-  tooltip: true,
-  legend: [1, 2, 3, 4],
-  onClick: function(date, nb) {
-    api.listNotesByDate(date, function(data){
+var noteZH = {
+  init:function(){
+    var that = this;
+    var cal = new CalHeatMap();
+    cal.init({
+      itemSelector: "#calendar",
+      domain: "year",
+      subDomain: "day",
+      cellSize: 11.5,
+      range: 1,
+      displayLegend: false,
+      data: api.listCalender(),
+      start: new Date(),
+      tooltip: true,
+      legend: [1, 2, 3, 4],
+      onClick: function(date, nb) {
+        api.listNotesByDate(date, function(data){
+          var options = {
+            data : data
+          }
+          nodeManage.refreshNotes(options);
+        });
+      }
+    });
+    cal.update(api.listCalender());
+    api.listAllNotes(function(data){
       var options = {
-        data : data
+        data : data,
+        limit : 3
       }
       nodeManage.refreshNotes(options);
     });
+    that.catchinput({
+      toggle : function(){
+        nodeManage.showInput();
+      },
+      addNote: function(){
+        var that = this;
+        var addString = $("#Notesinput")[0].value;
+        var addArray = addString.split(" #");
+        var data = {
+          content: addArray[0], date:new Date(), tags:addArray.splice(1)
+        }
+        api.addNewNote(data, function(){
+          cal.update(api.listCalender());
+          api.listAllNotes(function(data){
+            var options = {
+              data : data,
+              limit : 3
+            }
+            nodeManage.refreshNotes(options);
+          });
+          that.toggle();
+        });
+      }
+    });
+  },
+  catchinput:function(callback){
+    var map = {
+      84: 2,
+      13: 3,
+    }
+    document.addEventListener("keydown", function (event) {
+      var modifiers = event.altKey;
+      var mapped    = map[event.which];
+      if (modifiers) {
+        if (mapped !== undefined) {
+          event.preventDefault();
+          if(mapped == 2){
+            callback.toggle();
+          }
+        }
+      }
+      if(mapped == 3){
+        callback.addNote();
+      }
+    });
   }
-});
-cal.update(api.listCalender());
+}
+noteZH.init();
 
-api.listAllNotes(function(data){
-  var options = {
-    data : data,
-    limit : 3
-  }
-  nodeManage.refreshNotes(options);
-});
+
+
+
