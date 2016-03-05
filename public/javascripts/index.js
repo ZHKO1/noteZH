@@ -3,12 +3,14 @@
  */
 
 var api = {
+  apiHost:"http://127.0.0.1:3000",
   listCalender: function(){
+    var that = this;
     var result;
     $.ajax({
       type: "GET",
       async: false,
-      url: "/api/calender",
+      url: that.apiHost + "/api/calender",
       dataType: "json",
       success: function(data){
         result = data.result;
@@ -17,9 +19,10 @@ var api = {
     return result;
   },
   listAllNotes : function(callback){
+    var that = this;
     $.ajax({
       type: "GET",
-      url: "/api/list",
+      url: that.apiHost + "/api/list",
       dataType: "json",
       success: function(data){
         console.log(data);
@@ -30,9 +33,10 @@ var api = {
     });
   },
   listNotesByDate : function(date,callback){
+    var that = this;
     $.ajax({
       type: "GET",
-      url: "/api/list?date=" + date.getTime(),
+      url: that.apiHost + "/api/list?date=" + date.getTime(),
       dataType: "json",
       success: function(data){
         console.log(data);
@@ -43,9 +47,10 @@ var api = {
     });
   },
   listNotesByTag : function(tag){
+    var that = this;
     $.ajax({
       type: "GET",
-      url: "/api/list?tag=" + tag,
+      url: that.apiHost + "/api/list?tag=" + tag,
       dataType: "json",
       success: function(data){
         console.log(data);
@@ -53,12 +58,13 @@ var api = {
     });
   },
   addNewNote : function(data,callback){
+    var that = this;
     if((toString.apply(data.tags) === '[object Array]')&& (data.tags)){
       data.tags = JSON.stringify(data.tags);
     }
     $.ajax({
       type: "POST",
-      url: "/api/add",
+      url: that.apiHost + "/api/add",
       dataType: "json",
       data:data,
       success: function(data){
@@ -68,9 +74,10 @@ var api = {
     });
   },
   deleteNote : function(_id){
+    var that = this;
     $.ajax({
       type: "delete",
-      url: "/api/note?id=" + _id,
+      url: that.apiHost + "/api/note?id=" + _id,
       dataType: "json",
       success: function(data){
         console.log(data);
@@ -78,12 +85,13 @@ var api = {
     });
   },
   updateNote:function(id,data){
+    var that = this;
     if((toString.apply(data.tags) === '[object Array]')&& (data.tags)){
       data.tags = JSON.stringify(data.tags);
     }
     $.ajax({
       type: "POST",
-      url: "/api/note?id=" + id,
+      url: that.apiHost + "/api/note?id=" + id,
       dataType: "json",
       data:data,
       success: function(data){
@@ -111,6 +119,7 @@ var nodeManage = {
     }else{
       var limit = datas.length;
     }
+    $(".text-emphasized").text(limit);
     var ul_node = $("#notelist_ul");
     for(i = 0; i < limit ; i++){
       var data = datas[i];
