@@ -151,6 +151,17 @@ var nodeManage = {
       var date_node_html = "<span style = 'padding-left: 5px'>" + month_obj[date.getMonth() + 1] + " " + date.getDate()  + "</span>"
       var date_node = $(date_node_html);
       li_node.append(date_node);
+
+      var bottonNode = $("<div class='labels-list-actions right'></div>");
+      li_node.append(bottonNode);
+
+      var EditBotton = $('<button class="btn-link labels-list-action js-edit-label"><svg aria-hidden="true" class="octicon octicon-pencil" height="16" role="img" version="1.1" viewBox="0 0 14 16" width="14"><path d="M0 12v3h3l8-8-3-3L0 12z m3 2H1V12h1v1h1v1z m10.3-9.3l-1.3 1.3-3-3 1.3-1.3c0.39-0.39 1.02-0.39 1.41 0l1.59 1.59c0.39 0.39 0.39 1.02 0 1.41z"></path></svg></button>')
+      bottonNode.append(EditBotton);
+      EditBotton.click()
+      var DeleteBotton = $('<button class="btn-link labels-list-action js-details-target"><svg aria-hidden="true" class="octicon octicon-x" height="16" role="img" version="1.1" viewBox="0 0 12 16" width="12"><path d="M7.48 8l3.75 3.75-1.48 1.48-3.75-3.75-3.75 3.75-1.48-1.48 3.75-3.75L0.77 4.25l1.48-1.48 3.75 3.75 3.75-3.75 1.48 1.48-3.75 3.75z"></path></svg></button>');
+      bottonNode.append(DeleteBotton);
+      EditBotton.click()
+
       ul_node.append(li_node);
     }
   },
@@ -239,7 +250,3 @@ var noteZH = {
   }
 }
 noteZH.init();
-
-
-
-

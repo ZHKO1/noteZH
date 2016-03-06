@@ -422,3 +422,60 @@ input[type="text"] {
   -o-border-radius: none;
   border-radius: none;
 }
+
+
+.labels-list-action {
+  display: block;
+  float: left;
+  padding: 8px 10px;
+  color: #767676;
+}
+.btn-link {
+  display: inline-block;
+  padding: 0;
+  font-size: inherit;
+  color: #4078c0;
+  white-space: nowrap;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-appearance: none;
+}
+
+.right {
+  float: right;
+}
+
+.labels-list-action .octicon-pencil {
+  font-size: 14px;
+}
+.labels-list-action .octicon {
+  margin-right: 2px;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+.octicon {
+  display: inline-block;
+  vertical-align: text-top;
+  fill: currentColor;
+}
+
+.labels-list-action {
+  display: block;
+  float: left;
+  padding: 0px 10px;
+  color: #767676;
+}
+
+.labels-list-actions{
+  display: none;
+}
+
+#notelist_ul li:hover > div{
+  display: inline-block;
+}
