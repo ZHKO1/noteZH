@@ -85,7 +85,7 @@ var api = {
       }
     });
   },
-  updateNote:function(id,data){
+  updateNote:function(id,data,callback){
     var that = this;
     if((toString.apply(data.tags) === '[object Array]')&& (data.tags)){
       data.tags = JSON.stringify(data.tags);
@@ -97,6 +97,7 @@ var api = {
       data:data,
       success: function(data){
         console.log(data);
+        callback();
       }
     });
   }
@@ -107,7 +108,32 @@ var nodeManage = {
     this.options = {};
     this.options = options;
   },
-  showInput: function(){
+  toggleCreateInput: function(){
+    var that = this;
+    if($('#Notesinput_container')[0].children.length == 0){
+      that.addInputNode({
+        node    : $('#Notesinput_container')[0],
+        InputId : "Notesinput",
+      },function(node){
+        var that = this;
+        var addString = node[0].value;
+        var addArray = addString.split(" #");
+        var data = {
+          content: addArray[0], date:new Date(), tags:addArray.splice(1)
+        }
+        api.addNewNote(data, function(){
+          noteZH.cal.update(api.listCalender());
+          api.listAllNotes(function(data){
+            var options = {
+              data : data,
+              limit : 3
+            }
+            nodeManage.refreshNotes(options);
+          });
+          $('#Notesinput_container').fadeToggle();
+        });
+      });
+    }
     $("#Notesinput")[0].value = "";
     $("#Notesinput_container").fadeToggle();
     $("#Notesinput").focus();
@@ -165,14 +191,58 @@ var nodeManage = {
       var EditBotton = $('<button class="btn-link labels-list-action js-edit-label"><svg aria-hidden="true" class="octicon octicon-pencil" height="16" role="img" version="1.1" viewBox="0 0 14 16" width="14"><path d="M0 12v3h3l8-8-3-3L0 12z m3 2H1V12h1v1h1v1z m10.3-9.3l-1.3 1.3-3-3 1.3-1.3c0.39-0.39 1.02-0.39 1.41 0l1.59 1.59c0.39 0.39 0.39 1.02 0 1.41z"></path></svg></button>')
       EditBotton[0].data = data;
       bottonNode.append(EditBotton);
+      EditBotton[0].liNode = li_node;
       EditBotton.click(function(){
-        console.log(this.data);
+        var self = this;
+        $('.input-list').hide();
+        $('.input-list input').each(function(idex, item){
+          item.value = "";
+        })
+        if(!self.input){
+          self.input = that.addInputNode({
+            node    : self.liNode[0],
+            placeholder : self.data.content
+          },function(node) {
+            var addString = node[0].value;
+            var addArray = addString.split(" #");
+            var data = {
+              content: addArray[0], tags: addArray.splice(1)
+            };
+            api.updateNote(self.data._id , data, function () {
+              node.fadeToggle();
+              setTimeout(function(){
+                if(that.options.date){
+                  api.listNotesByDate(that.options.date, function(data){
+                    var options = {
+                      data : data,
+                      date: date
+                    }
+                    nodeManage.refreshNotes(options);
+                  });
+                }else{
+                  api.listAllNotes(function(data){
+                    var options = {
+                      data : data,
+                      limit : 3
+                    }
+                    nodeManage.refreshNotes(options);
+                  });
+                }
+              },500)
+            });
+          });
+        }else{
+          self.input.input.focus();
+          self.input.input[0].value = "";
+          self.input.remove();
+          delete self.input;
+        }
       })
+
       var DeleteBotton = $('<button class="btn-link labels-list-action js-details-target"><svg aria-hidden="true" class="octicon octicon-x" height="16" role="img" version="1.1" viewBox="0 0 12 16" width="12"><path d="M7.48 8l3.75 3.75-1.48 1.48-3.75-3.75-3.75 3.75-1.48-1.48 3.75-3.75L0.77 4.25l1.48-1.48 3.75 3.75 3.75-3.75 1.48 1.48-3.75 3.75z"></path></svg></button>');
       DeleteBotton[0].data = data;
       bottonNode.append(DeleteBotton);
       DeleteBotton.click(function(){
-        console.log(this.data);
         api.deleteNote(this.data._id, function(){
           noteZH.cal.update(api.listCalender());
           if(that.options.date){
@@ -199,6 +269,32 @@ var nodeManage = {
   },
   clearNotes:function(){
     $("#notelist_ul")[0].innerHTML = "";
+  },
+  addInputNode:function(options,callback){
+    var node = options.node;
+    var containerNode = $(node);
+    var ulNode = $('<ul class="input-list style-2 clearfix"></ul>');
+    containerNode.append(ulNode);
+    var liNode = $('<li></li>');
+    ulNode.append(liNode);
+    var inputNode = $('<input type="text">');
+    if(options.InputId){
+      inputNode.attr("id", options.InputId);
+    }
+    if(options.placeholder){
+      inputNode.attr("placeholder", options.placeholder);
+    }else{
+      inputNode.attr("placeholder", "MyNote #tag1 #tag2");
+    }
+    liNode.append(inputNode);
+    inputNode.keydown(function(event){
+      if(event.which == "13"){
+        callback(inputNode);
+      }
+    });
+    ulNode.li = liNode;
+    ulNode.input = inputNode;
+    return ulNode;
   }
 }
 
@@ -238,26 +334,7 @@ var noteZH = {
     });
     that.catchinput({
       toggle : function(){
-        nodeManage.showInput();
-      },
-      addNote: function(){
-        var that = this;
-        var addString = $("#Notesinput")[0].value;
-        var addArray = addString.split(" #");
-        var data = {
-          content: addArray[0], date:new Date(), tags:addArray.splice(1)
-        }
-        api.addNewNote(data, function(){
-          cal.update(api.listCalender());
-          api.listAllNotes(function(data){
-            var options = {
-              data : data,
-              limit : 3
-            }
-            nodeManage.refreshNotes(options);
-          });
-          that.toggle();
-        });
+        nodeManage.toggleCreateInput();
       }
     });
   },
@@ -276,9 +353,6 @@ var noteZH = {
             callback.toggle();
           }
         }
-      }
-      if(mapped == 3){
-        callback.addNote();
       }
     });
   }
