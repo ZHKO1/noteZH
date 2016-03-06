@@ -103,6 +103,10 @@ var api = {
 }
 
 var nodeManage = {
+  initStatus:function(options){
+    this.options = {};
+    this.options = options;
+  },
   showInput: function(){
     $("#Notesinput")[0].value = "";
     $("#Notesinput_container").fadeToggle();
@@ -110,6 +114,7 @@ var nodeManage = {
   },
   refreshNotes:function(options){
     var that = this;
+    this.initStatus(options);
     that.clearNotes();
     that.addNoteData(options.data.result, options.limit);
   },
@@ -170,16 +175,25 @@ var nodeManage = {
         console.log(this.data);
         api.deleteNote(this.data._id, function(){
           noteZH.cal.update(api.listCalender());
-          api.listAllNotes(function(data){
-            var options = {
-              data : data,
-              limit : 3
-            }
-            nodeManage.refreshNotes(options);
-          });
+          if(that.options.date){
+            api.listNotesByDate(that.options.date, function(data){
+              var options = {
+                data : data,
+                date: date
+              }
+              nodeManage.refreshNotes(options);
+            });
+          }else{
+            api.listAllNotes(function(data){
+              var options = {
+                data : data,
+                limit : 3
+              }
+              nodeManage.refreshNotes(options);
+            });
+          }
         })
       })
-
       ul_node.append(li_node);
     }
   },
@@ -206,7 +220,8 @@ var noteZH = {
       onClick: function(date, nb) {
         api.listNotesByDate(date, function(data){
           var options = {
-            data : data
+            data : data,
+            date: date
           }
           nodeManage.refreshNotes(options);
         });
