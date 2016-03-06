@@ -73,7 +73,7 @@ var api = {
       }
     });
   },
-  deleteNote : function(_id){
+  deleteNote : function(_id,callback){
     var that = this;
     $.ajax({
       type: "delete",
@@ -81,6 +81,7 @@ var api = {
       dataType: "json",
       success: function(data){
         console.log(data);
+        callback();
       }
     });
   },
@@ -113,6 +114,7 @@ var nodeManage = {
     that.addNoteData(options.data.result, options.limit);
   },
   addNoteData:function(datas, limit, order){
+    var that = this;
     var i = 0;
     if(limit){
       var limit = limit>datas.length?datas.length:limit;
@@ -156,11 +158,27 @@ var nodeManage = {
       li_node.append(bottonNode);
 
       var EditBotton = $('<button class="btn-link labels-list-action js-edit-label"><svg aria-hidden="true" class="octicon octicon-pencil" height="16" role="img" version="1.1" viewBox="0 0 14 16" width="14"><path d="M0 12v3h3l8-8-3-3L0 12z m3 2H1V12h1v1h1v1z m10.3-9.3l-1.3 1.3-3-3 1.3-1.3c0.39-0.39 1.02-0.39 1.41 0l1.59 1.59c0.39 0.39 0.39 1.02 0 1.41z"></path></svg></button>')
+      EditBotton[0].data = data;
       bottonNode.append(EditBotton);
-      EditBotton.click()
+      EditBotton.click(function(){
+        console.log(this.data);
+      })
       var DeleteBotton = $('<button class="btn-link labels-list-action js-details-target"><svg aria-hidden="true" class="octicon octicon-x" height="16" role="img" version="1.1" viewBox="0 0 12 16" width="12"><path d="M7.48 8l3.75 3.75-1.48 1.48-3.75-3.75-3.75 3.75-1.48-1.48 3.75-3.75L0.77 4.25l1.48-1.48 3.75 3.75 3.75-3.75 1.48 1.48-3.75 3.75z"></path></svg></button>');
+      DeleteBotton[0].data = data;
       bottonNode.append(DeleteBotton);
-      EditBotton.click()
+      DeleteBotton.click(function(){
+        console.log(this.data);
+        api.deleteNote(this.data._id, function(){
+          noteZH.cal.update(api.listCalender());
+          api.listAllNotes(function(data){
+            var options = {
+              data : data,
+              limit : 3
+            }
+            nodeManage.refreshNotes(options);
+          });
+        })
+      })
 
       ul_node.append(li_node);
     }
@@ -194,6 +212,7 @@ var noteZH = {
         });
       }
     });
+    that.cal = cal;
     cal.update(api.listCalender());
     api.listAllNotes(function(data){
       var options = {
