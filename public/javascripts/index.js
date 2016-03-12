@@ -3,7 +3,7 @@
  */
 
 var api = {
-  apiHost:"http://127.0.0.1:3000",
+  apiHost:"",
   listCalender: function(){
     var that = this;
     var result;
