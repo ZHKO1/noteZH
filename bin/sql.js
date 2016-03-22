@@ -194,6 +194,9 @@ api.findNoteByDate = function(dateIN, callback){
   dateForm.setDate(dateIN.getDate());
   dateForm.setHours(0);
   dateForm.setMinutes(0);
+  var utc = dateForm.getTime() + (dateForm.getTimezoneOffset() * 60000);
+  dateForm = new Date(utc + (3600000*8));
+
 
   var dateTo = new Date();
   dateTo.setYear(dateIN.getYear() + 1900);
@@ -201,6 +204,9 @@ api.findNoteByDate = function(dateIN, callback){
   dateTo.setDate(dateIN.getDate() + 1);
   dateTo.setHours(0);
   dateTo.setMinutes(0);
+  var utc = dateTo.getTime() + (dateTo.getTimezoneOffset() * 60000);
+  dateTo = new Date(utc + (3600000*8));
+
 
   noteModel.find({
     date:{
