@@ -123,6 +123,8 @@ api.addNote        = function(data,options){
     }else{
       console.dir(noteData._doc);
       var date = noteData._doc.date;
+      var utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+      date = new Date(utc + (3600000*8));
       var year  = date.getYear() + 1900;
       var month = date.getMonth() + 1;
       var date  = date.getDate();
@@ -144,6 +146,8 @@ api.deleteNote     = function(_id, options){
       }
     }else{
       var date = doc._doc.date;
+      var utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+      date = new Date(utc + (3600000*8));
       var year  = date.getYear() + 1900;
       var month = date.getMonth() + 1;
       var date  = date.getDate();
@@ -188,26 +192,12 @@ api.findNoteByDate = function(dateIN, callback){
   var results = [];
   var dateIN = new Date(parseInt(dateIN,10));
 
-  var dateForm = new Date();
-  dateForm.setYear(dateIN.getYear() + 1900);
-  dateForm.setMonth(dateIN.getMonth());
-  dateForm.setDate(dateIN.getDate());
-  dateForm.setHours(0);
-  dateForm.setMinutes(0);
-  var utc = dateForm.getTime() + (dateForm.getTimezoneOffset() * 60000);
-  dateForm = new Date(utc + (3600000*8));
+  var dateForm = new Date(dateIN);
 
-
-  var dateTo = new Date();
-  dateTo.setYear(dateIN.getYear() + 1900);
-  dateTo.setMonth(dateIN.getMonth());
-  dateTo.setDate(dateIN.getDate() + 1);
-  dateTo.setHours(0);
-  dateTo.setMinutes(0);
-  var utc = dateTo.getTime() + (dateTo.getTimezoneOffset() * 60000);
-  dateTo = new Date(utc + (3600000*8));
-
-
+  var dateTo = new Date(dateIN);
+  dateTo.setHours(dateIN.getHours() + 24);
+  console.log(dateForm);
+  console.log(dateTo);
   noteModel.find({
     date:{
     "$gte": dateForm,
@@ -215,6 +205,7 @@ api.findNoteByDate = function(dateIN, callback){
   }}, function(err,notes){
     if(err) return console.error(err);
     notes.map(function(note){
+      console.log(note);
       results.push(note.toJSON());
     });
     console.log(results.length);
